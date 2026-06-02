@@ -8,14 +8,18 @@
 ## Installation
 You can install this package locally by cloning the repository and using `pip`:
 
-`git clone [https://github.com/tijinsaji/compiledUdl.git](https://github.com/tijinsaji/compiledUdl.git)`
+```bash
+git clone [https://github.com/tijinsaji/compiledUdl.git](https://github.com/tijinsaji/compiledUdl.git)
 
-`cd compiledUdl`
+cd compiledUdl
 
-`pip install -r requirements.txt .`
+pip install -r requirements.txt .
+```
 
 
 ## Usage
-`import compiledUdl`
+```python
+import compiledUdl
 
-`compiledUdl.main()`
+compiledUdl.main()
+```
