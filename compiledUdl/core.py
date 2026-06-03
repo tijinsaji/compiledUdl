@@ -55,9 +55,8 @@ def compile_data(root_folder="./"):
 
     dUdl_list_sorted = sorted(dUdl_list)
     dUdl_array_sorted = np.array(dUdl_list_sorted)
-    np.savetxt("Compiled_dU_dl.txt", dUdl_array_sorted, fmt=['%1.3f', ' %.4e', ' %.4e'], 
-               header='#Lambda dU/d\lambda[kJ/mol] Std.Err_dU/d\lambda [kJ/mol]')
-    integrate_value , spline_fit = integrate(dUdl_array_sorted[:,0],dUdl_array_sorted[:,1])
+    #np.savetxt("Compiled_dU_dl.txt", dUdl_array_sorted, fmt=['%1.3f', ' %.4e', ' %.4e'], header='#Lambda dU/d\lambda[kJ/mol] Std.Err_dU/d\lambda [kJ/mol]')
+    #integrate_value , spline_fit = integrate(dUdl_array_sorted[:,0],dUdl_array_sorted[:,1])
     print(f"Integrated answer is {integrate_value:.3f} kJ/mol")
     return dUdl_array_sorted
 
