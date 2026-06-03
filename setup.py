@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="compile-dUdl", 
+    name="compiledUdl", 
     version="0.1.0",
     author="Tijin Saji",
     author_email="tijinsaji97@gmail.com",
