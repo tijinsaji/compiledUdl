@@ -18,6 +18,7 @@ pip install -r requirements.txt .
 
 
 ## Usage
+Go to the directory which contains the $\lambda$ directories and do
 ```python
 import compiledUdl
 
