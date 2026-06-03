@@ -6,16 +6,23 @@ from scipy.interpolate import UnivariateSpline
 # Constant conversion factor (1 kJ/mol = 120 K)
 kJ_mol_Kelvin = 120.0
 
-def integrate_spline(x, y, a=0.0, b=1.0):
-    """Fits a cubic spline to the data and integrates it between limits a and b."""
+def integrate_spline(x, y, a=0, b=1):
+    """
+    x - independent variable of the data set
+    y - dependent variable of the data set
+    a - lower limit of integration (usually 0)
+    b - upper limit of integration (usually 1)
+    """
+    #Fit a spline
     spline = UnivariateSpline(x, y, s=0)
-    integral_value = spline.integral(a, b) 
+
+    #Integrate the spline
+    integral_value = spline.integral(x, y) 
     return integral_value, spline(x)
 
 def compile_data(root_folder="./"):
     """
-    Traverses subdirectories to parse 'dU_dlambda.out' files,
-    converting raw Kelvin data into kJ/mol.
+    Traverses subdirectories to construct 'dU_dlambda.out' in kJ/mol.
     """
     dUdl_list = []
     
@@ -28,29 +35,36 @@ def compile_data(root_folder="./"):
                 try:
                     a = np.loadtxt(target_file, comments='#')
                     # Handle single-row files gracefully by making them 2D
-                    if a.ndim == 1:
-                        a = np.atleast_2d(a)
+                    #if a.ndim == 1:
+                        #a = np.atleast_2d(a)
                         
                     for i in range(len(a[:, 0])):
-                        if not np.isnan(a[i, 1]):
+                        if str(a[i,1]) != 'nan':
+                        #if not np.isnan(a[i, 1]):
                             # Convert Kelvin values to kJ/mol
                             dUdl_list.append([
                                 a[i, 0], 
                                 a[i, 1] / kJ_mol_Kelvin, 
                                 a[i, 2] / kJ_mol_Kelvin
-                            ])
+                            ]) # Converting from Kelvin to kJ/mol
                 except Exception as e:
                     print(f"Warning: Could not parse file {target_file}. Error: {e}")
                     
-    if not dUdl_list:
-        raise ValueError("No valid 'dU_dlambda.out' data was found in the subfolders.")
+    #if not dUdl_list:
+        #raise ValueError("No valid 'dU_dlambda.out' data could be constructed.")
 
     dUdl_list_sorted = sorted(dUdl_list)
-    return np.array(dUdl_list_sorted)
+    dUdl_array_sorted = np.array(dUdl_list_sorted)
+    np.savetxt("Compiled_dU_dl.txt", dUdl_array_sorted, fmt=['%1.3f', ' %.4e', ' %.4e'], 
+               header='#Lambda dU/d\lambda[kJ/mol] Std.Err_dU/d\lambda [kJ/mol]')
+    integrate_value , spline_fit = integrate(dUdl_array_sorted[:,0],dUdl_array_sorted[:,1])
+    print(f"Integrated answer is {integrate_value:.3f} kJ/mol")
+    return dUdl_array_sorted
 
 def plot_results(data_array, spline_fit, output_basename='dUdl_with_CubicFit'):
     """Generates and saves the analytical dU/dlambda cubic fit plot."""
     fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(6, 4.2))
+    fig.subplots_adjust(hspace=0.1)
     
     axs.plot(data_array[:, 0], data_array[:, 1], color='blue', linestyle='solid', 
              linewidth=2, marker='s', markersize=4, label=r'NO$_{3}^{-}$ + H$_{3}$O$^{+}$')
