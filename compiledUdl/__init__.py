@@ -16,8 +16,7 @@ def main():
         
     # Save the text compilation output
     import numpy as np
-    np.savetxt("Compiled_dU_dl.txt", data, fmt=['%1.3f', ' %.4e', ' %.4e'], 
-               header='#Lambda dU/d\\lambda[kJ/mol] Std.Err_dU/d\\lambda [kJ/mol]')
+    np.savetxt("Compiled_dU_dl.txt", data, fmt=['%1.3f', ' %.4e', ' %.4e'], header='#Lambda dU/d\\lambda[kJ/mol] Std.Err_dU/d\\lambda [kJ/mol]')
     
     # Calculate integration and fit
     integral_val, spline_fit = integrate_spline(data[:, 0], data[:, 1], 0.0, 1.0)
